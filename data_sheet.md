@@ -1,43 +1,91 @@
-# Datasheet Template
-
-As far as you can, complete the model datasheet. If you have got the data from the internet, you may not have all the information you need, but make sure you include all the information you do have. 
+# Data Sheet for AI4I 2020 Predictive Maintenance Dataset
 
 ## Motivation
 
-- For what purpose was the dataset created? 
-- Who created the dataset (e.g., which team, research group) and on behalf of which entity (e.g., company, institution, organization)? Who funded the creation of the dataset?
+**For what purpose was the dataset created?**  
+The dataset was created to support research and development in predictive maintenance applications. It is designed to simulate real-world scenarios where sensor data is used to predict machine failures, enabling proactive maintenance strategies.
 
- 
+**Who created the dataset?**  
+The dataset was created by S. Matzka and submitted to the UCI Machine Learning Repository.
+
+**What tasks does the dataset support?**  
+The dataset supports tasks such as classification (predicting machine failure), feature engineering, and model evaluation for predictive maintenance systems.
+
+---
+
 ## Composition
 
-- What do the instances that comprise the dataset represent (e.g., documents, photos, people, countries)? 
-- How many instances of each type are there? 
-- Is there any missing data?
-- Does the dataset contain data that might be considered confidential (e.g., data that is protected by legal privilege or by    doctor–patient confidentiality, data that includes the content of individuals’ non-public communications)?
+**What does the dataset contain?**  
+The dataset contains 10,000 datapoints with six features:  
+- **Product ID**: Unique identifier for each product.  
+- **Air temperature [K]**: Sensor measurement of air temperature.  
+- **Process temperature [K]**: Sensor measurement of process temperature.  
+- **Rotational speed [rpm]**: Rotational speed of the machine.  
+- **Torque [Nm]**: Torque applied to the machine.  
+- **Tool wear [min]**: Tool wear in minutes.  
 
-## Collection process
+Additionally, it includes a target variable, **Machine failure**, which indicates whether a failure occurred.
 
-- How was the data acquired? 
-- If the data is a sample of a larger subset, what was the sampling strategy? 
-- Over what time frame was the data collected?
+**Are there any missing values?**  
+No, the dataset does not contain missing values.
 
-## Preprocessing/cleaning/labelling
+**What is the source of the data?**  
+The dataset was sourced from the UCI Machine Learning Repository and is publicly available at [AI4I 2020 Predictive Maintenance Dataset](https://archive.ics.uci.edu/dataset/601/ai4i+2020+predictive+maintenance+dataset).
 
-- Was any preprocessing/cleaning/labeling of the data done (e.g., discretization or bucketing, tokenization, part-of-speech tagging, SIFT feature extraction, removal of instances, processing of missing values)? If so, please provide a description. If not, you may skip the remaining questions in this section. 
-- Was the “raw” data saved in addition to the preprocessed/cleaned/labeled data (e.g., to support unanticipated future uses)? 
- 
+---
+
+## Collection Process
+
+**How was the data collected?**  
+The data was generated to simulate sensor readings from a manufacturing environment. It represents a controlled dataset for predictive maintenance research.
+
+**What preprocessing was done?**  
+- Missing values were checked, and none were found.  
+- A correlation matrix was used to identify the most relevant features.  
+- The dataset was normalized to scale all features between 0 and 1.
+
+---
+
 ## Uses
 
-- What other tasks could the dataset be used for? 
-- Is there anything about the composition of the dataset or the way it was collected and preprocessed/cleaned/labeled that might impact future uses? For example, is there anything that a dataset consumer might need to know to avoid uses that could result in unfair treatment of individuals or groups (e.g., stereotyping, quality of service issues) or other risks or harms (e.g., legal risks, financial harms)? If so, please provide a description. Is there anything a dataset consumer could do to mitigate these risks or harms? 
-- Are there tasks for which the dataset should not be used? If so, please provide a description.
+**What are the intended uses of the dataset?**  
+The dataset is intended for training and evaluating machine learning models for predictive maintenance. It can also be used for feature selection and exploratory data analysis.
+
+**What are the limitations of the dataset?**  
+- The dataset only includes six features, which may not capture all real-world factors affecting machine failure.  
+- It is a simulated dataset and may not fully represent the complexity of real-world scenarios.
+
+---
 
 ## Distribution
 
-- How has the dataset already been distributed? 
-- Is it subject to any copyright or other intellectual property (IP) license, and/or under applicable terms of use (ToU)?  
+**How is the dataset distributed?**  
+The dataset is publicly available under the UCI Machine Learning Repository. It can be accessed at [AI4I 2020 Predictive Maintenance Dataset](https://archive.ics.uci.edu/dataset/601/ai4i+2020+predictive+maintenance+dataset).
+
+**Are there any restrictions on the dataset?**  
+No restrictions are mentioned, but users should cite the dataset appropriately when using it in research or applications.
+
+---
+
+## Ethical Considerations
+
+**Are there any ethical concerns with using this dataset?**  
+- The dataset is simulated and does not represent real-world data, which may lead to biases in model performance when applied to actual scenarios.  
+- Incorrect predictions (e.g., false negatives) could lead to safety risks or financial losses in real-world applications.
+
+**How should the dataset be cited?**  
+The dataset should be cited as:  
+Matzka, S. (2020). AI4I 2020 Predictive Maintenance Dataset. https://doi.org/10.24432/C5HS5C.
+
+---
 
 ## Maintenance
 
-- Who maintains the dataset?
+**Who is responsible for maintaining the dataset?**  
+The dataset is maintained by the UCI Machine Learning Repository.
 
+**Will the dataset be updated?**  
+There is no indication that the dataset will be updated.
+
+**How can users report issues?**  
+Users can report issues to the UCI Machine Learning Repository or the dataset creator, S. Matzka.

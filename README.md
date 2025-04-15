@@ -37,6 +37,8 @@ Matzka (2020a) has created a Predictive Maintenance dataset comprising 10,000 da
 
 **Has Missing Values?**: No
 
+**Link to data sheet**: [data_sheet.md](data_sheet.md)
+
 The dataset contains enough relevant data to train a model. CAFM relies on data from multiple sensors, and the dataset captures many of the relevant data sources expected in our environment. It will enable me to create an initial model that can assist in implementing predictive maintenance
 
 ## Data Preprocessing
@@ -44,7 +46,7 @@ The dataset contains enough relevant data to train a model. CAFM relies on data 
 The data was preprocessed in a pipeline as follows:
 
 - **Handling missing Values:** Checkd and no missing values were found in the dataset.
-- **Feature Engineering:** A corrolation matrix was ploted and relevant fetures were reduced to 4 ('TWF', 'HDF', 'PWF', and 'OSF').- 
+- **Feature Engineering:** A corrolation matrix was ploted and relevant fetures were reduced to 4 (`TWF`, `HDF`, `PWF`, and `OSF`).- 
 - **Feature Scaling:** All relevant features  were scaled between 0 and 1
 
 
@@ -53,10 +55,12 @@ The chosen algorithm for this model was Support Vector Machines (SVM). The reaso
 
 The data was split into 80% for trainning and 20% for testing.
 
+**Link to model card**: [model_card.md](model_card.md)
+
 ## HYPERPARAMETER OPTIMSATION
 SVMs are well defined in the Python SciKit-learn package, which offers a multitude of hyperparameters to fine-tune the model.
 
-I tried a few kernels "**Linear**", "**Poly**", "**Sigmoid**" and "**RBF**", with different **gammas, C and coef0** but in the end the default values for the **linear Kernel** delivered the best results with **99.925%** accuracy. 
+I tried a few kernels `Linear`, `Poly*`, `Sigmoid` and `RBF`, with different `gammas, C and coef0` but in the end the default values for the `linear Kernel` delivered the best results with `99.925%` accuracy. 
 
 ## RESULTS
 ```mermaid
@@ -80,10 +84,10 @@ The model delivered a **99.925%** accuracy against the test data.
 graph LR
     subgraph "Local Development Environment"
         direction LR
-        A[Developer Workstation] -- [1. Train Model] --> B(Python Script + SVM);
-        B -- [2. Save Model] --> C(model.dill);
-        A -- [3. Develop Flask App] --> D(Flask App Code);
-        A -- [4. Create Dockerfile] --> E(Dockerfile);
+        A[Developer Workstation] -- "[1. Train Model]" --> B(Python Script + SVM);
+        B -- "[2. Save Model]" --> C(model.dill);
+        A -- "[3. Develop Flask App]" --> D(Flask App Code);
+        A -- "[4. Create Dockerfile]" --> E(Dockerfile);
         D --> F{Codebase};
         C --> F;
         E --> F;
@@ -91,38 +95,43 @@ graph LR
 
     subgraph "Version Control & CI/CD"
         direction TB
-        F -- [5. Push Code] --> G[GitHub Repository];
-        G -- [6. Trigger] --> H[Google Cloud Build];
+        F -- "[5. Push Code]" --> G[GitHub Repository];
+        G -- "[6. Trigger]" --> H[Google Cloud Build];
     end
+
+    P[pcmlai.mydomain.com] 
 
     subgraph "Google Cloud Platform (GCP)"
         direction TB
-        H -- [7. Build Image (using Dockerfile)] --> I[Container Image];
-        I -- [8. Push Image] --> J[Artifact Registry / Container Registry];
-        H -- [9. Deploy Service] --> K[Cloud Run Service];
-        J -- [10. Pull Image] --> K;
+        H -- "[7. Build Image (using Dockerfile)]" --> I[Container Image];
+        I -- "[8. Push Image]" --> J[Artifact Registry / Container Registry];
+        H -- "[9. Deploy Service]" --> K[Cloud Run Service];
+        J -- "[10. Pull Image]" --> K;
         subgraph K ["Cloud Run Service"]
             direction LR
-            L(Container: Flask App) -- [Loads] --> M(model.dill);
-            L -- [Serves] --> N[API Endpoint];
+            L(Container: Flask App) -- "Loads" --> M(model.dill);
+            L -- "Serves Request" --> N[Internal API Endpoint];
+            N -- "Generates Response" --> L; 
         end
+        
+        P -- "Mapped via Cloud Run\n(CNAME: ghs.googlehosted.com)" --> N;
     end
 
     subgraph "End User Interaction"
         direction TB
-        O[End User / Client App] -- [11. Send JSON Request] --> N;
-        N -- [12. Return JSON Prediction --> O;
+        O[End User / Client App] -- "[11. Send JSON Request]" --> P;
+        P -- "[12. Return JSON Prediction]" --> O; 
     end
 ```
 
+**Note**: Please use the content of the folder named [cloud](cloud/) to create a all the required CI/CD pipeline and host your inference model in a cloud provider using a IaaS/PaaS configuration.
+
 ## TESTING THE MODEL
 
-https://flask-capstone-678882908008.europe-north2.run.app
+Calling the model from a automated script will be easy, bellow I provide a way to call it via **curl** but as long as you can send the data/doby a json format you can use anything like PHP, C#, Javascript, Python, Powershell, etc. 
 
-```console
-curl --location 'https://flask-capstone-678882908008.europe-north2.run.app/predict' \
---header 'Content-Type: application/json' \
---data '[
+```batch
+curl --location 'https://pcmlai.nelsoncerqueira.com/predict' --header 'Content-Type: application/json' --data '[
     {
         "UDI": 1,
         "Product ID": "M14860",
@@ -141,6 +150,11 @@ curl --location 'https://flask-capstone-678882908008.europe-north2.run.app/predi
 }
 ]'
 ```
+
+Example of a API call to the inference server and a response with the predicted values:
+![alt text](images/api_call.png)
+
+**Note**: I've sent one single item but you can send multiple items as long as they are seperate json objects.
 
 ## REFERENCES
 Amaury, A. B., Eduardo, B., & Beltrame, E. (2013). A COMBINATION OF SUPPORT VECTOR MACHINE AND K-NEAREST NEIGHBORS FOR MACHINE FAULT DETECTION. (T. &. Group, Ed.) Applied artificial intelligence 27.1, 36-49.
