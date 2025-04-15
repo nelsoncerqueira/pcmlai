@@ -6,8 +6,12 @@ Capstone project for the Professional Certificate in Machine Learning and Artifi
   - [DATASET INFORMATION](#dataset-information)
   - [Data Preprocessing](#data-preprocessing)
   - [MODEL](#model)
-  - [HYPERPARAMETER OPTIMSATION](#hyperparameter-optimsation)
-  - [RESULTS](#results)
+  - [HYPERPARAMETER OPTIMISATION](#hyperparameter-optimisation)
+    - [Process:](#process)
+    - [Results:](#results)
+  - [RESULTS](#results-1)
+    - [Key Metrics:](#key-metrics)
+    - [Confusion Matrix:](#confusion-matrix)
   - [HIGH LEVEL DIAGRAM AND CI/CD](#high-level-diagram-and-cicd)
   - [TESTING THE MODEL](#testing-the-model)
   - [REFERENCES](#references)
@@ -57,12 +61,41 @@ The data was split into 80% for trainning and 20% for testing.
 
 **Link to model card**: [model_card.md](model_card.md)
 
-## HYPERPARAMETER OPTIMSATION
-SVMs are well defined in the Python SciKit-learn package, which offers a multitude of hyperparameters to fine-tune the model.
+## HYPERPARAMETER OPTIMISATION
+The Support Vector Machine (SVM) classifier was chosen for its effectiveness in handling high-dimensional data and its ability to provide robust results for predictive maintenance tasks.
 
-I tried a few kernels `Linear`, `Poly*`, `Sigmoid` and `RBF`, with different `gammas, C and coef0` but in the end the default values for the `linear Kernel` delivered the best results with `99.925%` accuracy. 
+### Process:
+1. **Kernel Selection**: Various kernels were tested, including:
+   - `Linear`
+   - `Polynomial (Poly)`
+   - `Sigmoid`
+   - `Radial Basis Function (RBF)`
+
+2. **Hyperparameter Tuning**:
+   - **C (Regularization Parameter)**: Controls the trade-off between achieving a low error on the training data and minimizing model complexity.
+   - **Gamma**: Defines the influence of a single training example.
+   - **coef0**: Used in polynomial and sigmoid kernels to control the influence of higher-order terms.
+
+### Results:
+After extensive testing, the `Linear` kernel with default hyperparameters provided the best performance:
+- **C**: Default value
+- **Gamma**: Default value
+- **Accuracy**: `99.925%`
+
+The simplicity of the linear kernel, combined with its high accuracy, made it the optimal choice for this dataset. Other kernels, such as RBF and Poly, did not significantly improve accuracy and added unnecessary complexity.
 
 ## RESULTS
+The model achieved outstanding performance on the test dataset, demonstrating its effectiveness in predicting machine failures.
+
+### Key Metrics:
+- **Accuracy**: `99.925%`
+- **Precision**: High precision for both `Failure` and `No Failure` classes.
+- **Recall**: Near-perfect recall for the `No Failure` class, with minimal false negatives for the `Failure` class.
+
+### Confusion Matrix:
+
+The confusion matrix below illustrates the model's performance:
+
 ```mermaid
 
 %%{init: {"quadrantChart": {"chartWidth": 400, "chartHeight": 400}, "themeVariables": {"quadrant2Fill": "#08306B","quadrant4Fill": "#F1F7FD","quadrant3Fill": "#F7FBFF","quadrant1Fill": "#F7FBFF","quadrant2TextFill":"#FFFFFF" } }}%%
