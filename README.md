@@ -1,6 +1,18 @@
 # PREDICTIVE MAINTENANCE
 Capstone project for the Professional Certificate in Machine Learning and Artificial Intelligence from Imperial College London
 
+- [PREDICTIVE MAINTENANCE](#predictive-maintenance)
+  - [OVERVIEW](#overview)
+  - [DATASET INFORMATION](#dataset-information)
+  - [Data Preprocessing](#data-preprocessing)
+  - [MODEL](#model)
+  - [HYPERPARAMETER OPTIMSATION](#hyperparameter-optimsation)
+  - [RESULTS](#results)
+  - [HIGH LEVEL DIAGRAM AND CI/CD](#high-level-diagram-and-cicd)
+  - [TESTING THE MODEL](#testing-the-model)
+  - [REFERENCES](#references)
+
+
 ## OVERVIEW
 This capstone project focuses on predictive maintenance within a Computer-Aided Facilities Management (CAFM) system. 
 
@@ -8,12 +20,38 @@ There are 3 main groups of maintenance: **Corrective maintenance** , also known 
 
 
 ## DATASET INFORMATION
-Matzka (2020a) has created a Predictive Maintenance dataset comprising 10,000 datapoints with six features: Product ID, Air temperature, process temperature, rotational speed, torque, and tool wear (Matzka, 2020b)
+Matzka (2020a) has created a Predictive Maintenance dataset comprising 10,000 datapoints with six features: 
+
+- Product ID
+- Air temperature
+- process temperature
+- rotational speed
+- torque
+- tool wear
+
+**Dataset name**: AI4I 2020 Predictive Maintenance Dataset
+
+**Date donated**: 8/29/2020 
+
+**Source**: https://archive.ics.uci.edu/dataset/601/ai4i+2020+predictive+maintenance+dataset
+
+**Has Missing Values?**: No
 
 The dataset contains enough relevant data to train a model. CAFM relies on data from multiple sensors, and the dataset captures many of the relevant data sources expected in our environment. It will enable me to create an initial model that can assist in implementing predictive maintenance
 
+## Data Preprocessing
+
+The data was preprocessed in a pipeline as follows:
+
+- **Handling missing Values:** Checkd and no missing values were found in the dataset.
+- **Feature Engineering:** A corrolation matrix was ploted and relevant fetures were reduced to 4 ('TWF', 'HDF', 'PWF', and 'OSF').- 
+- **Feature Scaling:** All relevant features  were scaled between 0 and 1
+
+
 ## MODEL 
 The chosen algorithm for this model was Support Vector Machines (SVM). The reason was that SVMs provide one of the best results for this type of data. For complex data SVMs combined with KNN (Amaury, Eduardo, & Beltrame, 2013), neural networks or decision trees (Cheng et al. 2020, p. 3) will also work well.
+
+The data was split into 80% for trainning and 20% for testing.
 
 ## HYPERPARAMETER OPTIMSATION
 SVMs are well defined in the Python SciKit-learn package, which offers a multitude of hyperparameters to fine-tune the model.
@@ -35,8 +73,74 @@ quadrantChart
 
 ```
 
-## (OPTIONAL: CONTACT DETAILS)
-If you are planning on making your github repo public you may wish to include some contact information such as a link to your twitter or an email address. 
+The model delivered a **99.925%** accuracy against the test data.
+
+## HIGH LEVEL DIAGRAM AND CI/CD
+```mermaid
+graph LR
+    subgraph "Local Development Environment"
+        direction LR
+        A[Developer Workstation] -- [1. Train Model] --> B(Python Script + SVM);
+        B -- [2. Save Model] --> C(model.dill);
+        A -- [3. Develop Flask App] --> D(Flask App Code);
+        A -- [4. Create Dockerfile] --> E(Dockerfile);
+        D --> F{Codebase};
+        C --> F;
+        E --> F;
+    end
+
+    subgraph "Version Control & CI/CD"
+        direction TB
+        F -- [5. Push Code] --> G[GitHub Repository];
+        G -- [6. Trigger] --> H[Google Cloud Build];
+    end
+
+    subgraph "Google Cloud Platform (GCP)"
+        direction TB
+        H -- [7. Build Image (using Dockerfile)] --> I[Container Image];
+        I -- [8. Push Image] --> J[Artifact Registry / Container Registry];
+        H -- [9. Deploy Service] --> K[Cloud Run Service];
+        J -- [10. Pull Image] --> K;
+        subgraph K ["Cloud Run Service"]
+            direction LR
+            L(Container: Flask App) -- [Loads] --> M(model.dill);
+            L -- [Serves] --> N[API Endpoint];
+        end
+    end
+
+    subgraph "End User Interaction"
+        direction TB
+        O[End User / Client App] -- [11. Send JSON Request] --> N;
+        N -- [12. Return JSON Prediction --> O;
+    end
+```
+
+## TESTING THE MODEL
+
+https://flask-capstone-678882908008.europe-north2.run.app
+
+```console
+curl --location 'https://flask-capstone-678882908008.europe-north2.run.app/predict' \
+--header 'Content-Type: application/json' \
+--data '[
+    {
+        "UDI": 1,
+        "Product ID": "M14860",
+        "Type": "M",
+        "Air temperature [K]": 298.1,
+        "Process temperature [K]": 308.6,
+        "Rotational speed [rpm]": 1551,
+        "Torque [Nm]": 42.8,
+        "Tool wear [min]": 0,
+        "Machine failure": 0,
+        "TWF": 0,
+        "HDF": 0,
+        "PWF": 0,
+        "OSF": 0,
+        "RNF": 0
+}
+]'
+```
 
 ## REFERENCES
 Amaury, A. B., Eduardo, B., & Beltrame, E. (2013). A COMBINATION OF SUPPORT VECTOR MACHINE AND K-NEAREST NEIGHBORS FOR MACHINE FAULT DETECTION. (T. &. Group, Ed.) Applied artificial intelligence 27.1, 36-49.
